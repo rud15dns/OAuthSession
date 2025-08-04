@@ -13,4 +13,12 @@ google과 naver처럼 변수를 동일하게 설정했더니, kakao에서는 `in
 - Spring은 post가 아니라, client_secret_post를 허용해서 생긴 일이었다.
 - 카카오는 client_id와 client_secret을 본문 파라미터로 전송하기 때문에 `client_secret_post` 방식으로 넣는 것 같다. 
   -  인증 토큰 발급 요청 메소드가 post이다.
-  - Spring security 5.6 이후로 post가 client_secret_post로 변경되었다고 한다. 
+  - Spring security 5.6 이후로 post가 client_secret_post로 변경되었다고 한다.
+  
+- 이 부분에 대하여 질문을 드렸는데, 좀 더 명확히 답변해주셔서 답변을 정리해보았다.
+  - `client-authentication-method`의 경우 백엔드에서 `client-id`와 `client-secret`으로 소셜 로그인 제공자에게 토큰을 요청할 때,
+  - 어떤 방식으로 요청할지는, 소셜 로그인 제공자의 API 스펙에 따라 설정을 해야한다.
+  - 여기서 카카오의 경우는 기본값이 아닌 POST 방식을 요구하여 해당 문제가 발생하는 것으로 보인다.
+
+
+- 참고로, client-authentication-method의 경우, `none : 인증없이`, `client_secret_basic : 기본값 -> 헤더 방식 요청`, `client_secret_post: http body에 넣어서 요청` 이라고 한다. 
