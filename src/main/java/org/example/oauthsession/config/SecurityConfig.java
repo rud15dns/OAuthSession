@@ -36,8 +36,19 @@ public class SecurityConfig {
         // userInfoEndPoint의 Config에서 userService에다가 우리가 짠 것을 넣어놓는다.
         http
                 .oauth2Login((oauth2) -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
                         .userInfoEndpoint((userInfoEndpointConfig) ->
                                 userInfoEndpointConfig.userService(customOAuth2UserService)));
+
+        http
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID") // 서버 세션을 사용하고 있기 때문에
+                        .permitAll()
+                );
 
         http
                 .authorizeHttpRequests((auth) -> auth

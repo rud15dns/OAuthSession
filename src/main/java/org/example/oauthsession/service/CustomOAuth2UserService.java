@@ -1,6 +1,9 @@
 package org.example.oauthsession.service;
 
 import org.example.oauthsession.dto.*;
+import org.example.oauthsession.entity.UserEntity;
+import org.example.oauthsession.repository.UserRepository;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -12,6 +15,12 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     // DefaultOAuth2UserService가 OAuth2UserService의 구현체이기 때문에
     // 이를 extends 하더라도 상관이 없다.
+
+    // Repository에 회원 정보를 저장하려면, 의존성을 주입받아야 한다.
+    private final UserRepository userRepository;
+    public CustomOAuth2UserService(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
 
     // 부모 클래스의 속성과 메소드들을 자식 클래스에서 기능을 그대로 사용하거나 Override해서 커스텀.
     @Override
@@ -40,8 +49,30 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         else{
             return null;
         }
-        // 하드코딩으로 User 역할 강제
-        String role = "ROLE_USER";
+        // Repository에 저장하는 방식
+        String username = oAuth2Response.getProvider() +
+                " " + oAuth2Response.getProviderId();
+
+        UserEntity existData = userRepository.findByUsername(username);
+        String role = null;
+        if (existData == null){
+            // 처음 로그인 create
+            UserEntity userEntity = new UserEntity();
+            userEntity.setUsername(username);
+            userEntity.setEmail(oAuth2Response.getEmail());
+            userEntity.setRole("ROLE_USER");
+
+            role = userEntity.getRole();
+
+            userRepository.save(userEntity);
+        }
+        else{
+            // 존재하는 경우 update
+            role = existData.getRole();
+            existData.setEmail(oAuth2Response.getEmail());
+
+            userRepository.save(existData);
+        }
 
         return new CustomOAuth2User(oAuth2Response, role);
 

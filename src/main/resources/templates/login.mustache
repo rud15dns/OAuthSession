@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>로그인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e9face 0%, #dfff94 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .naver-btn {
+            background-color: #03C75A;
+            color: white;
+        }
+
+        .naver-btn:hover {
+            background-color: #02B351;
+        }
+
+        .google-btn {
+            background-color: white;
+            color: #333;
+            border: 2px solid #dadce0;
+        }
+
+        .google-btn:hover {
+            background-color: #f8f9fa;
+            border-color: #c1c5c9;
+        }
+
+        .kakao-btn {
+            background-color: #FEE500;
+            color: #3c1e1e;
+        }
+
+        .kakao-btn:hover {
+            background-color: #FEDD00;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .naver-icon {
+            background: white;
+            color: #03C75A;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .google-icon {
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwLjIgOC4xVjEySDEzLjlDMTMuNyAxMy4xIDEzLjEgMTMuOSAxMi4yIDE0LjNMMTUuMSAxNi42QzE3IDE0LjkgMTggMTIuNiAxOCAxMEMxOCA5LjQgMTcuOSA4LjggMTcuOCA4LjFIMTAuMloiIGZpbGw9IiM0Mjg1RjQiLz4KPHBhdGggZD0iTTUuMSAxMS45QzQuOSAxMS4zIDQuOCAxMC43IDQuOCAxMEM0LjggOS4zIDQuOSA4LjcgNS4xIDguMUw1LjEgNS4zSDIuMkMxLjQgNi45IDEgOC40IDEgMTBDMSAxMS42IDEuNCA5LjEgMi4yIDEwLjdMNS4xIDExLjlaIiBmaWxsPSIjRkJCQzA0Ii8+CjxwYXRoIGQ9Ik0xMCAzLjlDMTEuMyAzLjkgMTIuNSA0LjMgMTMuNCA1LjJMMTYgMi42QzE0LjMgMSAxMi4yIDAgMTAgMEM2LjEgMCAyLjcgMi40IDEuMiA1LjlMNC4xIDguMUM0LjkgNS43IDcuMiAzLjkgMTAgMy45WiIgZmlsbD0iI0VBNDMzNSIvPgo8cGF0aCBkPSJNMTAgMTZDNy4yIDE2IDQuOSAxNC4yIDQuMSAxMS45TDEuMiAxNC43QzIuNyAxNy4zIDYuMSAxOS43IDEwIDE5LjdDMTIuMSAxOS43IDE0LjIgMTguOSAxNS44IDE3LjNMMTIuOSAxNUMxMi4xIDE1LjUgMTEuMSAxNiAxMCAxNloiIGZpbGw9IiMzNEE4NTMiLz4KPC9zdmc+') no-repeat center;
+            background-size: contain;
+        }
+
+        .kakao-icon {
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDJDNS41IDIgMiA0LjkgMiA4LjVDMiAxMC44IDMuMiAxMi44IDUuMiAxNC4xTDQuNSAxNy4yQzQuNCAxNy42IDQuOCAxNy45IDUuMiAxNy43TDguOCAxNS42QzkuMiAxNS43IDkuNiAxNS43IDEwIDE1LjdDMTQuNSAxNS43IDE4IDEyLjggMTggOC41QzE4IDQuOSAxNC41IDIgMTAgMloiIGZpbGw9IiMzQzFFMUUiLz4KPC9zdmc+') no-repeat center;
+            background-size: contain;
+        }
+
+        .footer-text {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #888;
+            line-height: 1.4;
+        }
+
+        .footer-text a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .login-btn {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h1>로그인</h1>
+    <p class="subtitle">소셜 계정으로 간편하게 로그인하세요</p>
+
+    <div class="login-buttons">
+        <a href="/oauth2/authorization/naver" class="login-btn naver-btn">
+            <div class="icon naver-icon">N</div>
+            네이버로 로그인
+        </a>
+
+        <a href="/oauth2/authorization/google" class="login-btn google-btn">
+            <div class="icon google-icon"></div>
+            구글로 로그인
+        </a>
+
+        <a href="/oauth2/authorization/kakao" class="login-btn kakao-btn">
+            <div class="icon kakao-icon"></div>
+            카카오로 로그인
+        </a>
+    </div>
+
+    <p class="footer-text">
+        로그인하시면 <a href="#">이용약관</a> 및 <a href="#">개인정보처리방침</a>에<br>
+        동의하는 것으로 간주됩니다.
+    </p>
+</div>
+</body>
+</html>
