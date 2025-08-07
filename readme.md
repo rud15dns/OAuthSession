@@ -15,6 +15,20 @@
 ![img_2.png](img_2.png)
 
 ---
+### 생각해본 것
+1. `properties`파일 대신에 `ClientRegistration`과 `ClientRegistrationRepository`를 사용하는 이유?
+   1) 커스텀을 하려면은 클래스로 만드는 것이 필수이다.
+   
+   3) Properties 파일에서 일일이 변수를 관리하면, 지원하는 Provider가 늘어날수록 관리하기가 복잡해진다.
+- 그래서 `ClientRegistration` 객체로 각 Provider 마다 모든 설정을 객체화해서 관리하게 된다. -> `SocialClientRegistration.java`
+- 이것을 ClientRegistrationRepository(하나의 빈)에서 관리한다.
+- InMemory를 사용해도 되는 이유는, 해당 oauth 외부 서버들을 처음에 설정해놓는 정적인 부분이라서, 많아봤자 10개 내외일 테기 때문이다.
+
+
+- 반면 AuthorizedClientService 같은 경우에는, 사용자 한 명 한 명이 OAuth2 로그인에 성공할 때마다 발급되는 토큰 정보를 저장하는 공간이어서,
+- 이 정보를 InMemory로 관리하면, 사용자가 많아질 수록 서버의 메모리가 부족해져 OOM 오류가 발생할 위험이 매우 크다.
+- 따라서, 이 부분은 DB(Jdbc)를 사용해서 토큰 정보를 관리해야 한다. 
+
 
 ### 발생했던 오류
 google과 naver처럼 변수를 동일하게 설정했더니, kakao에서는 `invalidcredentials` 오류가 발생하였다.
